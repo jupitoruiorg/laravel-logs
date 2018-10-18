@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "GetCode\\LaravelLog\\": "src"
+            "GetCode\\LaravelLogs\\": "src"
         },
         "files": [
             "src/helpers.php"
@@ -37,7 +37,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "GetCode\\LaravelLog\\Prodivers\\LogServiceProvider"
+                "GetCode\\LaravelLogs\\Prodivers\\LogServiceProvider"
             ]
         }
     }
