@@ -7,6 +7,8 @@
  * Time: 14:21
  */
 
+use GetCode\LaravelLogs\LaravelLogger;
+use GetCode\LaravelLogs\Models\LogQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\WorkerStopping;
@@ -24,13 +26,12 @@ class LogServiceProvider extends ServiceProvider
         $this->publishMigrations();
 
         $this->registerLogQueues();
-
     }
 
 
     public function register()
     {
-
+        $this->app->bind(LaravelLogger::class);
     }
 
     protected function publishConfig()
@@ -64,6 +65,21 @@ class LogServiceProvider extends ServiceProvider
         }
     }*/
 
+    public static function determineLogQueueModel(): string
+    {
+        $logQueueModel = config('getcode.laravel-logs.log_queue_model') ?? LogQueue::class;
+        if (! is_a($logQueueModel, LogQueue::class, true)
+            || ! is_a($logQueueModel, Model::class, true)) {
+            throw InvalidConfiguration::modelIsNotValid($logQueueModel);
+        }
+        return $logQueueModel;
+    }
+    public static function getLogQueueModelInstance(): Model
+    {
+        $activityModelClassName = self::determineLogQueueModel();
+        return new $activityModelClassName();
+    }
+
     protected function registerLogQueues()
     {
         if (config('getcode.laravel-logs.log_queues_enabled') === false) {
@@ -84,16 +100,46 @@ class LogServiceProvider extends ServiceProvider
                     'file_name' => $command->getFileName(),
                     'pdf_view' => $command->getOption('pdf_view'),
                     'export_source' => $command->getOption('export_source'),
-                    'user_id' => $command->getOption('user_id'),
+                    'caused_by' => $command->getOption('user_id'),
                 ]);
             }
+
+            laravel_log()
+                ->useLog('queue')
+                ->setData($data)
+                ->asStart()
+                ->log();
 
         });
 
         Queue::after(function (JobProcessed $event) {
+
+            $data = [
+                'queue_id' => $event->job->getJobId(),
+                'connection_name' => $event->connectionName,
+                'command_name' => array_get($event->job->payload(), 'displayName', ''),
+            ];
+
+            laravel_log()
+                ->useLog('queue')
+                ->setData($data)
+                ->asCompleted()
+                ->log();
         });
 
         Queue::failing(function (JobFailed $event) {
+
+            $data = [
+                'queue_id' => $event->job->getJobId(),
+                'connection_name' => $event->connectionName,
+                'command_name' => array_get($event->job->payload(), 'displayName', ''),
+            ];
+
+            laravel_log()
+                ->useLog('queue')
+                ->setData($data)
+                ->asFailed()
+                ->log();
 
         });
     }
