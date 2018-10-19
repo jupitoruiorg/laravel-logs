@@ -17,7 +17,7 @@ class LaravelLogger {
     protected $log_model = null;
 
     protected $log_data = [];
-    
+
     protected $proccess_status;
 
     public function __construct()

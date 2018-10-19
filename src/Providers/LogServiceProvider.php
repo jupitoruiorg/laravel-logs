@@ -12,7 +12,6 @@ use GetCode\LaravelLogs\Models\LogQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\WorkerStopping;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
@@ -32,6 +31,8 @@ class LogServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(LaravelLogger::class);
+        $this->bindIf('gc.laravel-logs.log.repo', 'GetCode\LaravelLogs\Repositories\Logs\LogQueueRepository');
+
     }
 
     protected function publishConfig()
