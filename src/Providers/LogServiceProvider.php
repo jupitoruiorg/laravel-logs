@@ -38,7 +38,7 @@ class LogServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../config/getcode.laravel-logs.php' => config_path('getcode.laravel-logs.php'),
         ], 'config');
-        $this->mergeConfigFrom(__DIR__.'/../config/getcode.laravel-logs.php', 'getcode.laravel-logs');
+        $this->mergeConfigFrom(__DIR__.'/../../config/getcode.laravel-logs.php', 'getcode.laravel-logs');
     }
 
     protected function publishMigrations()
