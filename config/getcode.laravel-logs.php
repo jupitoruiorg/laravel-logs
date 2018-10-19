@@ -16,4 +16,8 @@ return [
 
     'log_queues_table_name' => env('LARAVEL_LOG_QUEUES_TABLE_NAME', 'gc_log_queues'),
 
+    'log_queue_model' => \GetCode\LaravelLogs\Models\LogQueue::class,
+
+    'default_log_name' => '',
+
 ];

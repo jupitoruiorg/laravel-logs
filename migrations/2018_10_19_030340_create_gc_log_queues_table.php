@@ -17,7 +17,11 @@ class CreateGcLogQueuesTable extends Migration
 
         Schema::create(config('getcode.laravel-logs.log_queues_table_name'), function (Blueprint $table) {
             $table->increments('id');
+            $table->tinyInteger('status')->nullable()->default(0);
             $table->string('queue_id')->nullable();
+            $table->dateTime('queue_start_time')->nullable();
+            $table->dateTime('queue_end_time')->nullable();
+            $table->decimal('queue_execute_time', 5, 2)->nullable();
             $table->string('connection_name')->nullable();
             $table->string('command_name')->nullable();
             $table->integer('caused_by')->nullable();
