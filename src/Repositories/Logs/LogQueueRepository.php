@@ -117,7 +117,7 @@ class LogQueueRepository implements LogQueueRepositoryInterface
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if ($log->status === LogQueue::STATUS_PENDING && (int) $log->is_much_time === 1) {
+        if ($log && $log->status === LogQueue::STATUS_PENDING && (int) $log->is_much_time === 1) {
             return true;
         }
 
