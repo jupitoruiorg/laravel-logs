@@ -182,7 +182,7 @@ class LaravelLogger {
                 $model = $model->findLastWithData($this->getData());
             }
 
-            if ($model->exists) {
+            if ($model && $model->exists) {
                 $model->setStatusFailed();
                 $model->setQueueEndTime();
             }
@@ -194,7 +194,7 @@ class LaravelLogger {
                 $model = $model->findLastWithData($this->getData());
             }
 
-            if ($model->exists) {
+            if ($model && $model->exists) {
                 $model->setStatusCompleted();
                 $model->setQueueEndTime();
             }
