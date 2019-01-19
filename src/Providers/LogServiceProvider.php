@@ -15,6 +15,7 @@ use Illuminate\Queue\Events\WorkerStopping;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class LogServiceProvider extends ServiceProvider
 {
@@ -104,7 +105,13 @@ class LogServiceProvider extends ServiceProvider
                 'command_name' => array_get($event->job->payload(), 'displayName', ''),
             ];
 
-            if (config('getcode.laravel-logs.get_code_log_queues_fields') === true) {
+            if (
+                config('getcode.laravel-logs.get_code_log_queues_fields') === true
+                    &&
+                method_exists($command, 'getFileName')
+                    &&
+                method_exists($command, 'getOption')
+            ) {
                 $data = array_merge($data, [
                     'file_name' => $command->getFileName(),
                     'pdf_view' => $command->getOption('pdf_view'),
