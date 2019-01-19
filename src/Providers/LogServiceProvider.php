@@ -25,6 +25,13 @@ class LogServiceProvider extends ServiceProvider
         $this->publishMigrations();
 
         $this->registerLogQueues();
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes.php');
+
+        $this->loadViewsFrom(__DIR__.'../../resources/views', 'laravel-logs');
+        $this->publishes([
+            __DIR__.'/../../resources/views' => base_path('resources/views/vendor/laravel-logs')
+        ]);
     }
 
 
@@ -33,6 +40,7 @@ class LogServiceProvider extends ServiceProvider
         $this->app->bind(LaravelLogger::class);
         $this->bindIf('gc.laravel-logs.log.repo', 'GetCode\LaravelLogs\Repositories\Logs\LogQueueRepository');
 
+        $this->bindIf('gc.logs.queue.mailer', 'GetCode\LaravelLogs\Mailer\QueueMailer');
     }
 
     protected function publishConfig()

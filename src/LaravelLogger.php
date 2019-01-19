@@ -187,6 +187,10 @@ class LaravelLogger {
                 $model->setQueueEndTime();
             }
 
+            if (config('getcode.laravel-logs.log_queue_notification_enabled_failed') === true) {
+                app('gc.logs.queue.mailer')->sendEmailQueueFailed($model);
+            }
+
         } elseif($this->isProccessStatusCompleted()) {
             if (isset($this->getData()['queue_id']) && filled($this->getData()['queue_id'])) {
                 $model = $model->findByQueueId($this->getData()['queue_id']);
@@ -197,6 +201,10 @@ class LaravelLogger {
             if ($model && $model->exists) {
                 $model->setStatusCompleted();
                 $model->setQueueEndTime();
+            }
+
+            if (config('getcode.laravel-logs.log_queue_notification_enabled_completed') === true) {
+                app('gc.logs.queue.mailer')->sendEmailQueueCompleted($model);
             }
 
         }
