@@ -27,7 +27,7 @@ class QueueMailer
             $emails = explode(',', $emails);
 
             Mail::to($emails)
-                ->send($message);
+                ->queue($message);
         } catch (\Exception $e) {
             //dd($e);
         }
@@ -47,7 +47,7 @@ class QueueMailer
             $emails = explode(',', $emails);
 
             Mail::to($emails)
-                ->send($message);
+                ->queue($message);
         } catch (\Exception $e) {
             //dd($e);
         }
