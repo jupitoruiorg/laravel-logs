@@ -14,6 +14,11 @@ return [
 
     'get_code_log_queues_fields' => env('GC_LARAVEL_LOG_QUEUES_FIELDS', false),
 
+    'log_queue_notification_enabled_failed' => env('LARAVEL_LOG_QUEUES_NOTIFICATION_ENABLED_FAILED', false),
+    'log_queue_notification_enabled_completed' => env('LARAVEL_LOG_QUEUES_NOTIFICATION_ENABLED_COMPLETED', false),
+
+    'log_queue_notification_emails' => env('LARAVEL_LOG_QUEUES_NOTIFICATION_EMAILS', null),
+
     'log_queues_table_name' => env('LARAVEL_LOG_QUEUES_TABLE_NAME', 'gc_log_queues'),
 
     'log_queue_model' => \GetCode\LaravelLogs\Models\LogQueue::class,
