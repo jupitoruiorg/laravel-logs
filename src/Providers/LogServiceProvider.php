@@ -8,6 +8,8 @@
  */
 
 use GetCode\LaravelLogs\LaravelLogger;
+use GetCode\LaravelLogs\Mailer\Views\QueueMailCompleted;
+use GetCode\LaravelLogs\Mailer\Views\QueueMailFailed;
 use GetCode\LaravelLogs\Models\LogQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Events\JobFailed;
@@ -99,10 +101,15 @@ class LogServiceProvider extends ServiceProvider
         Queue::before(function (JobProcessing $event) {
             $command = unserialize($event->job->payload()['data']['command']);
 
+            $command_name = array_get($event->job->payload(), 'displayName', '');
+            if (in_array($command_name, [QueueMailFailed::class, QueueMailCompleted::class])) {
+                return false;
+            }
+
             $data = [
-                'queue_id' => $event->job->getJobId(),
+                'queue_id'        => $event->job->getJobId(),
                 'connection_name' => $event->connectionName,
-                'command_name' => array_get($event->job->payload(), 'displayName', ''),
+                'command_name'    => $command_name,
             ];
 
             if (
@@ -113,10 +120,10 @@ class LogServiceProvider extends ServiceProvider
                 method_exists($command, 'getOption')
             ) {
                 $data = array_merge($data, [
-                    'file_name' => $command->getFileName(),
-                    'pdf_view' => $command->getOption('pdf_view'),
+                    'file_name'     => $command->getFileName(),
+                    'pdf_view'      => $command->getOption('pdf_view'),
                     'export_source' => $command->getOption('export_source'),
-                    'caused_by' => $command->getOption('user_id'),
+                    'caused_by'     => $command->getOption('user_id'),
                 ]);
             }
 
@@ -130,10 +137,15 @@ class LogServiceProvider extends ServiceProvider
 
         Queue::after(function (JobProcessed $event) {
 
+            $command_name = array_get($event->job->payload(), 'displayName', '');
+            if (in_array($command_name, [QueueMailFailed::class, QueueMailCompleted::class])) {
+                return false;
+            }
+
             $data = [
-                'queue_id' => $event->job->getJobId(),
+                'queue_id'        => $event->job->getJobId(),
                 'connection_name' => $event->connectionName,
-                'command_name' => array_get($event->job->payload(), 'displayName', ''),
+                'command_name'    => $command_name,
             ];
 
             laravel_log()
@@ -145,10 +157,15 @@ class LogServiceProvider extends ServiceProvider
 
         Queue::failing(function (JobFailed $event) {
 
+            $command_name = array_get($event->job->payload(), 'displayName', '');
+            if (in_array($command_name, [QueueMailFailed::class, QueueMailCompleted::class])) {
+                return false;
+            }
+
             $data = [
-                'queue_id' => $event->job->getJobId(),
+                'queue_id'        => $event->job->getJobId(),
                 'connection_name' => $event->connectionName,
-                'command_name' => array_get($event->job->payload(), 'displayName', ''),
+                'command_name'    => $command_name,
             ];
 
             laravel_log()

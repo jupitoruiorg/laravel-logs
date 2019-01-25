@@ -174,6 +174,7 @@ class LaravelLogger {
             $model->fill($this->getData());
             $model->setStatusPending();
             $model->setQueueStartTime();
+            $model->save();
 
         } elseif($this->isProccessStatusFailed()) {
             if (isset($this->getData()['queue_id']) && filled($this->getData()['queue_id'])) {
