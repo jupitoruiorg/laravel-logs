@@ -57,25 +57,7 @@ class LogServiceProvider extends ServiceProvider
     protected function publishMigrations()
     {
         $this->loadMigrationsFrom( __DIR__.'/../../migrations');
-        //$this->publishQueueLogMigrations();
     }
-
-    /*protected function publishQueueLogMigrations()
-    {
-        if (! class_exists('CreateGcLogQueuesTable')) {
-            $timestamp = date('Y_m_d_His', time());
-            $this->publishes([
-                __DIR__.'/../../migrations/create_gc_log_queues_table.php.stub' => database_path("/migrations/{$timestamp}_create_gc_log_queues_table.php"),
-            ], 'migrations');
-        }
-
-        if (! class_exists('AddGetCodeFieldsToGcLogQueuesTable')) {
-            $timestamp = date('Y_m_d_His', time() + 1);
-            $this->publishes([
-                __DIR__.'/../../migrations/add_getcode_fields_to_gc_log_queues_table.php.stub' => database_path("/migrations/{$timestamp}_add_getcode_fields_to_gc_log_queues_table.php"),
-            ], 'migrations');
-        }
-    }*/
 
     public static function determineLogQueueModel(): string
     {
@@ -86,6 +68,7 @@ class LogServiceProvider extends ServiceProvider
         }
         return $logQueueModel;
     }
+    
     public static function getLogQueueModelInstance(): Model
     {
         $activityModelClassName = self::determineLogQueueModel();
