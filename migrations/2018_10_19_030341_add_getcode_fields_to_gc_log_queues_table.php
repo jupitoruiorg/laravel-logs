@@ -12,20 +12,20 @@ class AddGetCodeFieldsToGcLogQueuesTable extends Migration
     public function up()
     {
         if (
-            Schema::hasTable(config('getcode.laravel-logs.log_queues_table_name'))
-                &&
+            Schema::connection(config('getcode.laravel-logs.log_connection'))->hasTable(config('getcode.laravel-logs.log_queues_table_name'))
+            &&
             (
-                Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'file_name')
-                    &&
-                Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'pdf_view')
-                    &&
-                Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'export_source')
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'file_name')
+                &&
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'pdf_view')
+                &&
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'export_source')
             )
         ) {
             return;
         }
 
-        Schema::table(config('getcode.laravel-logs.log_queues_table_name'), function (Blueprint $table) {
+        Schema::connection(config('getcode.laravel-logs.log_connection'))->table(config('getcode.laravel-logs.log_queues_table_name'), function (Blueprint $table) {
             $table->string('file_name')->nullable()->after('command_name');
             $table->string('pdf_view')->nullable()->after('file_name');
             $table->string('export_source')->nullable()->after('pdf_view');
@@ -37,20 +37,20 @@ class AddGetCodeFieldsToGcLogQueuesTable extends Migration
      */
     public function down()
     {
-    	if (
-    		Schema::hasTable(config('getcode.laravel-logs.log_queues_table_name'))
-    			&&
-			(
-				Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'file_name')
-					&&
-				Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'pdf_view')
-					&&
-				Schema::hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'export_source')
-			)
-		) {
-            Schema::table(config('getcode.laravel-logs.log_queues_table_name'), function (Blueprint $table) {
-				$table->dropColumn(['file_name', 'pdf_view', 'export_source']);
-		    });
+        if (
+            Schema::connection(config('getcode.laravel-logs.log_connection'))->hasTable(config('getcode.laravel-logs.log_queues_table_name'))
+            &&
+            (
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'file_name')
+                &&
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'pdf_view')
+                &&
+                Schema::connection(config('getcode.laravel-logs.log_connection'))->hasColumn(config('getcode.laravel-logs.log_queues_table_name'), 'export_source')
+            )
+        ) {
+            Schema::connection(config('getcode.laravel-logs.log_connection'))->table(config('getcode.laravel-logs.log_queues_table_name'), function (Blueprint $table) {
+                $table->dropColumn(['file_name', 'pdf_view', 'export_source']);
+            });
         }
 
     }

@@ -25,4 +25,6 @@ return [
 
     'default_log_name' => '',
 
+    'log_connection' => env('GC_LARAVEL_LOG_CONNECTION', 'mysql_logs'),
+
 ];
