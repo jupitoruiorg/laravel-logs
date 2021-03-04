@@ -24,6 +24,9 @@ class LogQueue extends Model
         if (! isset($this->table)) {
             $this->setTable(config('getcode.laravel-logs.log_queues_table_name'));
         }
+
+        $this->connection = config('getcode.laravel-logs.log_connection');
+
         parent::__construct($attributes);
     }
 
