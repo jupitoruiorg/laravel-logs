@@ -31,7 +31,7 @@ class LogServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/../routes.php');
 
-        $this->loadViewsFrom(__DIR__.'../../resources/views', 'laravel-logs');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'laravel-logs');
         $this->publishes([
             __DIR__.'/../../resources/views' => base_path('resources/views/vendor/laravel-logs')
         ]);
